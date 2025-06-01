@@ -13,8 +13,17 @@
             <label for="salary">Enter your salary per hour:</label>
             <input type="text" id="salary" name="salary" 
             pattern="^\d+(\.\d+)?$"
-            placeholder="salary per hour ex:(00.00)"
+            placeholder="00.00"
             class="border px-2 py-1 rounded-lg" required>
+            <label for="hoursAttended">Hours Attended for Bi-weekly</label>
+            <div class="flex gap-2">
+                <input type="number" id="hoursAttended" name="hoursAttended"
+                class="border px-2 py-1 rounded-lg w-full"
+                placeholder="Hours" min="0" max="80" required />
+                <input type="number" id="minutesAttended" name="minutesAttended"
+                class="border px-2 py-1 rounded-lg w-full"
+                placeholder="Minutes" min="0" max="59" required />
+            </div>
             <label for="night-differential">Night differential:</label>
             <select type="number" id="night-differential"
             name="night-differential" placeholder="night differential"
@@ -32,6 +41,7 @@
             <p class="text-sm text-gray-600">The calculations assume a standard 80-hour work bi-weekly schedule.</p>
             <p class="text-sm text-gray-600">The monthly salary is calculated based on 4 weeks in a month, and the yearly salary is based on 12 months.</p> 
             <h5 class="text-2xl font-bold">Result</h5>
+            <p id="yourBiWeeklySalaryResult"></p>
             <p id="biWeeklySalaryResult"></p>
             <p id="MonthlySalaryResult"></p>
             <p id="YearlySalaryResult"></p>
@@ -45,16 +55,25 @@
 
             const totalSalary = salary + (salary * (nightDifferential / 100));
             const hoursWorked = 80; // Assuming a standard 80-hour work bi-week
-            const biWeeklySalary =totalSalary * hoursWorked;
-            const monthlySalary =biWeeklySalary * 2; // Assuming 4 weeks in a month
+            const hoursAttended = Number(document.getElementById('hoursAttended').value) + 
+                                  (Number(document.getElementById('minutesAttended').value) / 60);
+            if (hoursAttended > hoursWorked) {
+                alert('Hours attended cannot exceed 80 hours bi-weekly.');
+                return;
+            }
+            const yourTotalSalary = totalSalary * hoursAttended;
+            const biWeeklySalary = totalSalary * hoursWorked;
+            const monthlySalary = biWeeklySalary * 2; // Assuming 4 weeks in a month
             const yearlySalary = monthlySalary * 12; // Assuming 12 months in a year
-            document.getElementById('biWeeklySalaryResult').textContent = `Bi-Weekly Salary: ₱${biWeeklySalary.toLocaleString()}`;
-            document.getElementById('MonthlySalaryResult').textContent = `Monthly Salary: ₱${monthlySalary.toLocaleString()}`;
-            document.getElementById('YearlySalaryResult').textContent = `Yearly Salary: ₱${yearlySalary.toLocaleString()}`;
+            document.getElementById('yourBiWeeklySalaryResult').textContent = `Your Bi-Weekly Salary: ₱${yourTotalSalary.toLocaleString()}`;
+            document.getElementById('biWeeklySalaryResult').textContent = `Expected Bi-Weekly Salary: ₱${biWeeklySalary.toLocaleString()}`;
+            document.getElementById('MonthlySalaryResult').textContent = `Expected Monthly Salary: ₱${monthlySalary.toLocaleString()}`;
+            document.getElementById('YearlySalaryResult').textContent = `Expected Yearly Salary: ₱${yearlySalary.toLocaleString()}`;
         });
         document.addEventListener('DOMContentLoaded', () => {
             const resetBtn = document.getElementById('resetBtn');
             resetBtn.addEventListener('click', () => {
+                document.getElementById('yourBiWeeklySalaryResult').textContent = '';
                 document.getElementById('biWeeklySalaryResult').textContent = '';
                 document.getElementById('MonthlySalaryResult').textContent = '';
                 document.getElementById('YearlySalaryResult').textContent = '';
