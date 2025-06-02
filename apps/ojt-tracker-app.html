@@ -65,15 +65,10 @@
             const ojtMinutes = Number(document.getElementById('ojtMinutes').value);
             const lateHours = Number(document.getElementById('lateHours').value);
             const lateMinutes = Number(document.getElementById('lateMinutes').value);
-            const absence = Number(document.getElementById('absence').value);
-            const totalOvertime = (overtimeHours * 60) + overtimeMinutes;
-            const totalOjt = (ojtHours * 60) + ojtMinutes;
-            const totalLate = (lateHours * 60) + lateMinutes;
-            const totalOjtTime = totalOjt + totalOvertime - totalLate;
+            const totalAbsentees = Number(document.getElementById('absence').value);
+            const totalOjtTime = ((ojtHours * 60 + ojtMinutes) - (overtimeHours * 60 + overtimeMinutes)) + (lateHours * 60 + lateMinutes);
             const totalOjtHours = Math.floor(totalOjtTime / 60);
             const totalOjtMinutes = totalOjtTime % 60;
-            const totalAbsentees = absence;
-            
             const endDate = new Date(startDate);
             const removeWeekends = (totalOjtHours * 60 + totalOjtMinutes) / 480; // Assuming 8 hours workday
             const totalDays = Math.ceil(removeWeekends);
